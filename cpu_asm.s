@@ -18,17 +18,17 @@ load_idt:
 	sti
 	ret
 
-.global irq0
-irq0:
+.global timer_irq
+timer_irq:
 	pusha
-	call irq0_handler
+	call timer_handler
 	popa
 	iret
 
-.global irq1
-irq1:
+.global keyboard_irq
+keyboard_irq:
 	pusha
-	call irq1_handler
+	call keyboard_handler
 	popa
 	iret
 

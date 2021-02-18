@@ -53,7 +53,6 @@ _start:
 	load_gdt:
 	cli
 	lgdt gdt_desc
-	sti
 	
 	call kernel_main
 1:	hlt
