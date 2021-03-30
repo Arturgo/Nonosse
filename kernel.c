@@ -1,4 +1,5 @@
 #include "setup.h"
+#include "multiboot.h"
 
 typedef struct {
 	unsigned short offset0_15;
@@ -66,12 +67,16 @@ void map_interrupts() {
 	load_idt(&idt_ptr);
 }
 
-void kernel_main(void) {
+void kernel_main(unsigned int ebx) {
+	multiboot_info_t *multi_info = (multiboot_info_t *) ebx;
+	if (multi_info == NULL)
+		return ;
+
 	setup();
 	
 	map_interrupts();
  
-	terminal_writestring("Salut les amis !");
+	terminal_writestring("Salut les amis !\nComment ca va ?");
 	
-	terminal_move_cursor(1);
+	terminal_move_cursor(16);
 }

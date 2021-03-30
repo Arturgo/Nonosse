@@ -51,10 +51,12 @@ _start:
 	.long gdt
 
 	load_gdt:
-	cli
-	lgdt gdt_desc
-	
-	call kernel_main
+		cli
+		lgdt gdt_desc
+
+	call_kmain:
+		push %ebx // ebx = pointer to multiboot info
+		call kernel_main
 1:	hlt
 	jmp 1b
 
