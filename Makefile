@@ -11,7 +11,7 @@ CXX := $(CROSS)-g++
 
 all: boot
 
-%.o: %.s
+%.o: %.S
 	$(CC) -c $(ASFLAGS) -o $@ $<
 
 %.o: %.c

@@ -67,11 +67,7 @@ void map_interrupts() {
 	load_idt(&idt_ptr);
 }
 
-void kernel_main(unsigned int ebx) {
-	multiboot_info_t *multi_info = (multiboot_info_t *) ebx;
-	if (multi_info == NULL)
-		return ;
-
+void kernel_main() {
 	setup();
 	
 	map_interrupts();
@@ -80,3 +76,4 @@ void kernel_main(unsigned int ebx) {
 	
 	terminal_move_cursor(16);
 }
+

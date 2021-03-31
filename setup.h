@@ -10,7 +10,6 @@
 
 void setup() {
 	setup_terminal();
-	
 	setup_keyboard();
 	setup_timer();	
 }

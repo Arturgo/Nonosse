@@ -1,28 +1,34 @@
 ENTRY(_start)
- 
+
+START_VIRT = 0xC0000000;
+
 SECTIONS
 {
 	. = 1M;
- 
-	.text BLOCK(4K) : ALIGN(4K)
-	{
+
+	.boot : ALIGN(4k) {
 		*(.multiboot)
+		*(.lower_half_boot)
+		. = ALIGN(4k);
+	}
+	. = . + START_VIRT;
+	.text : AT(ADDR(.text) - START_VIRT) ALIGN(4k) {
 		*(.text)
 	}
- 
-	.rodata BLOCK(4K) : ALIGN(4K)
-	{
+
+	.rodata : AT(ADDR(.rodata) - START_VIRT) ALIGN(4k) {
 		*(.rodata)
 	}
- 
-	.data BLOCK(4K) : ALIGN(4K)
-	{
+
+	.data : AT(ADDR(.data) - START_VIRT) ALIGN(4K) {
 		*(.data)
 	}
- 
-	.bss BLOCK(4K) : ALIGN(4K)
-	{
+
+	.bss : AT(ADDR(.bss) - START_VIRT) {
+		*(.bss_boot_pages)
+		*(.bss_stack)
 		*(COMMON)
-		*(.bss)
 	}
+
 }
+
