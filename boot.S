@@ -126,10 +126,9 @@ _higher_half:
     cli
     lgdt gdt_desc
 
-
+	
 	call kernel_main
 
-	cli
 1:	hlt
 	jmp 1b
 

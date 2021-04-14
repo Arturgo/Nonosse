@@ -22,7 +22,7 @@ void edit_idt_entry(unsigned short select, unsigned int offset, unsigned char ty
 	desc->select = select;
 	desc->zero = 0;
 	desc->type = type;
-	desc->offset16_31 = (offset & 0xffff0000) >> 16;
+	desc->offset16_31 = (offset >> 16) & 0xffff;
 }
 
 void map_interrupts() {
@@ -41,7 +41,7 @@ void map_interrupts() {
 	port_out(0xA1, 0x01);
 	
 	port_out(0x21, 0x0);
-   port_out(0xA1, 0x0);
+	port_out(0xA1, 0x0);
 	
 	edit_idt_entry(0x08, (unsigned int)timer_irq, 0x8E, &idt[32]);
 	edit_idt_entry(0x08, (unsigned int)keyboard_irq, 0x8E, &idt[33]);
@@ -61,7 +61,7 @@ void map_interrupts() {
 	edit_idt_entry(0x08, (unsigned int)irq14, 0x8E, &idt[46]);
 	edit_idt_entry(0x08, (unsigned int)irq15, 0x8E, &idt[47]);
 	
-	idt_ptr.limit = 8 * 256;
+	idt_ptr.limit = sizeof(idt_entry) * 256 - 1;
 	idt_ptr.base = (unsigned int)&idt;
 	
 	load_idt(&idt_ptr);
