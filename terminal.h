@@ -79,16 +79,20 @@ void terminal_putchar(char c)
 {
 	if (c == '\n')
 	{
-		if (++terminal_row == VGA_HEIGHT)
-			terminal_row = 0;
+		if (++terminal_row == VGA_HEIGHT){
+			terminal_row--;
+			sauterLigne();
+		}
 		terminal_column = 0;
 		return ;
 	}
 	terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
 	if (++terminal_column == VGA_WIDTH) {
 		terminal_column = 0;
-		if (++terminal_row == VGA_HEIGHT)
-			terminal_row = 0;
+		if (++terminal_row == VGA_HEIGHT){
+			terminal_row--;
+			sauterLigne();
+		}
 	}
 }
  
@@ -103,11 +107,37 @@ void terminal_writestring(const char* data)
 	terminal_write(data, strlen(data));
 }
 
+void sauterLigne(){
+	for(size_t ligne = 1;ligne<VGA_HEIGHT;ligne++){
+		for(size_t colonne=0;colonne<VGA_WIDTH;colonne++){
+			terminal_buffer[VGA_WIDTH*(ligne-1)+colonne]=terminal_buffer[VGA_WIDTH*ligne+colonne];
+		}
+	}
+	for(size_t colonne=0;colonne<VGA_WIDTH;colonne++)
+		terminal_buffer[VGA_WIDTH*(VGA_HEIGHT-1)+colonne]=vga_entry(' ', terminal_color);
+}
+
 void terminal_move_cursor(unsigned short pos) {
 	port_out(0x3D4, 14);
 	port_out(0x3D5,    ((pos >> 8) & 0x00FF));
 	port_out(0x3D4, 15);
 	port_out(0x3D5,    pos & 0x00FF);
+}
+
+void terminal_write_int(const unsigned int nb) 
+{
+	int puiss=1;
+	int v=0;
+	int cop=nb;
+	while(10*puiss<=cop){
+		puiss*=10;
+		v++;
+	}
+	while(puiss){
+		terminal_putchar((cop/puiss)+'0');
+		cop-=(cop/puiss)*puiss;
+		puiss/=10;
+	}
 }
 
 #endif

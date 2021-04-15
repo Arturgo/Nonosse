@@ -15,7 +15,7 @@ void keyboard_handler(void) {
 
 	unsigned char event_code = port_in(0x60);
 	terminal_writestring("IT WORKS !!!!\n");
-	
+	terminal_write_int(event_code);
 	// l'octet event_code contient le code de la touche appuyée
 }
 
